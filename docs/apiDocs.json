@@ -1,0 +1,12 @@
+{
+    "/": "lemur_zone REST-API routes documentation",
+    "/register": "Register a new User",
+    "/login": "Sign into the application",
+    "/logout": "Sign out of the application",
+    "/users": "Get all users",
+    "/user/id": "Update, Delete a user account",    
+    "/posts": "Get all posts",
+    "/post/by/id": "Get user's posts",
+    "/post/new/id": "Create a post",
+    "/post/id": "Update, Delete a post"
+}
