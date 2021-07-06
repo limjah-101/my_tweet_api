@@ -66,7 +66,7 @@ exports.requireSignIn = expressJwt({
     userProperty: "auth"
 });
 
-// add forgotPassword and resetPassword methods
+
 exports.forgotPassword = (req, res) => {
     if (!req.body) return res.status(400).json({ message: "No request body" });
     if (!req.body.email)
@@ -85,7 +85,7 @@ exports.forgotPassword = (req, res) => {
  
         // generate a token with user id and secret
         const token = jwt.sign(
-            { _id: user._id, iss: "NODEAPI" },
+            { _id: user.id, iss: "lemur_zone_jwt" },
             process.env.JWT_SECRET
         );
  
@@ -100,6 +100,7 @@ exports.forgotPassword = (req, res) => {
             html: `<p>Please use the following link to reset your password:</p> <p>${
                 process.env.CLIENT_URL
             }/reset-password/${token}</p>`
+            
         };
  
         return user.updateOne({ resetPasswordLink: token }, (err, success) => {
@@ -146,7 +147,7 @@ exports.resetPassword = (req, res) => {
                 });
             }
             res.json({
-                message: `Great! Now you can login with your new password.`
+                message: `Great! Now you can login with your new password.`,                
             });
         });
     });
@@ -158,6 +159,7 @@ exports.resetPassword = (req, res) => {
  */
 exports.socialLogin = (req, res) => {
     // try signup by finding user with req.email
+    console.log(req.body);
     let user = User.findOne({ email: req.body.email }, (err, user) => {
         if (err || !user) {
             // create a new user and login
@@ -167,10 +169,11 @@ exports.socialLogin = (req, res) => {
 
             // generate a token with user id and secret
             const token = jwt.sign(
-                { _id: user._id, iss: "NODEAPI" },
+                { _id: user._id, iss: "lemur_zone_jwt" },
                 process.env.JWT_SECRET
+                
             );
-            res.cookie("t", token, { expire: new Date() + 9999 });
+            res.cookie("token", token, { expire: new Date() + 9999 });
 
             // return response with user and token to frontend client
             const { _id, name, email } = user;
@@ -185,10 +188,10 @@ exports.socialLogin = (req, res) => {
 
             // generate a token with user id and secret
             const token = jwt.sign(
-                { _id: user._id, iss: "NODEAPI" },
+                { _id: user._id, iss: "lemur_zone_jwt" },
                 process.env.JWT_SECRET
             );
-            res.cookie("t", token, { expire: new Date() + 9999 });
+            res.cookie("token", token, { expire: new Date() + 9999 });
             
             // return response with user and token to frontend client
             const { _id, name, email } = user;
